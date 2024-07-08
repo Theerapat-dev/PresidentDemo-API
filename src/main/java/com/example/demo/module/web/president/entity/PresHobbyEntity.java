@@ -8,15 +8,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "resHobby")
+@Table(name = "PresHobby")
 public class PresHobbyEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Presname")
-    private String Presname;
+    @Column(name = "PresName")
+    private String presName;
 
     @Column(name = "Hobby")
-    private String Hobby;
+    private String hobby;
 
+    // Getters and Setters
+    public String getPresName() {
+        return presName;
+    }
+
+    public void setPresName(String presName) {
+        this.presName = presName;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
 }
