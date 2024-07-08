@@ -3,6 +3,8 @@ package com.example.demo.module.web.president.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +23,9 @@ public class PresidentController {
     private PresidentDomain domain;
 
     @GetMapping("/Administration")
-    public List<AdministrationEntity> postMethodName() {
-        return domain.postMethodName();
+    public ResponseEntity<List<AdministrationEntity>> getAllAdministrations() {
+        List<AdministrationEntity> administrations = domain.getAllAdministrations();
+        return new ResponseEntity<>(administrations, HttpStatus.OK);
     }
     
 }

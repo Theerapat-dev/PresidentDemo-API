@@ -10,20 +10,43 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Administration", schema = "Pres", indexes = {
-    @Index(name = "Administration_INDEX1", columnList = "Adminnr", unique = false)
+    @Index(name = "Administration_INDEX1", columnList = "AdminNr", unique = false)
 })
 public class AdministrationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Adminnr", nullable = false)
-    private Float AdminNr;
+    @Column(name = "AdminNr", nullable = false)
+    private Long adminNr;
 
-    @Column(name = "Presname", nullable = false, length = 16, columnDefinition = "varchar(16) COLLATE SQL_Latin1_General_CP1_CI_AS")
-    private String PresName;
+    @Column(name = "PresName", nullable = false, length = 16, columnDefinition = "varchar(16) COLLATE SQL_Latin1_General_CP1_CI_AS")
+    private String presName;
 
     @Column(name = "Yearinaugurated", nullable = false)
-    private Float  YearInaugurated;
+    private Long yearInaugurated;
 
+    // Getters and Setters
+    public Long getAdminNr() {
+        return adminNr;
+    }
 
+    public void setAdminNr(Long adminNr) {
+        this.adminNr = adminNr;
+    }
+
+    public String getPresName() {
+        return presName;
+    }
+
+    public void setPresName(String presName) {
+        this.presName = presName;
+    }
+
+    public Long getYearInaugurated() {
+        return yearInaugurated;
+    }
+
+    public void setYearInaugurated(Long yearInaugurated) {
+        this.yearInaugurated = yearInaugurated;
+    }
 }

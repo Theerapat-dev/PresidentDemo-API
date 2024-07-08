@@ -11,10 +11,10 @@ import com.example.demo.module.web.president.repository.AdministrationRepository
 @Component
 public class PresidentDomain {
     @Autowired
-    private AdministrationRepository AdministrationRepository;
+    private AdministrationRepository repository;
 
-    public List<AdministrationEntity> postMethodName() {
-        return AdministrationRepository.findAll();
+    public List<AdministrationEntity> getAllAdministrations() {
+        return repository.findAll();
     }
 
 }
