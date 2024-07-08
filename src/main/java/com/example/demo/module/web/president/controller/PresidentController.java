@@ -12,16 +12,17 @@ import com.example.demo.module.web.president.entity.AdministrationEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
+
 @RestController
 @RequestMapping("/api")
 public class PresidentController {
 
     @Autowired
-    private PresidentDomain Domain;
+    private PresidentDomain domain;
 
-    @GetMapping("/get")
+    @GetMapping("/Administration")
     public List<AdministrationEntity> postMethodName() {
-        return PresidentDomain.get();
+        return domain.postMethodName();
     }
     
 }

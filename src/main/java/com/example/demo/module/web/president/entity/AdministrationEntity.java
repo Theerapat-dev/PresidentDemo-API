@@ -10,18 +10,19 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Administration", schema = "Pres", indexes = {
-    @Index(name = "Administration_INDEX1", columnList = "AdminNr", unique = false)
+    @Index(name = "Administration_INDEX1", columnList = "Adminnr", unique = false)
 })
 public class AdministrationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "AdminNr", nullable = false)
+    @Column(name = "Adminnr", nullable = false)
     private Float AdminNr;
 
-    @Column(name = "PresName", nullable = false, length = 16, columnDefinition = "varchar(16) COLLATE SQL_Latin1_General_CP1_CI_AS")
+    @Column(name = "Presname", nullable = false, length = 16, columnDefinition = "varchar(16) COLLATE SQL_Latin1_General_CP1_CI_AS")
     private String PresName;
-    @Column(name = "YearInaugurated", nullable = false)
+
+    @Column(name = "Yearinaugurated", nullable = false)
     private Float  YearInaugurated;
 
 
