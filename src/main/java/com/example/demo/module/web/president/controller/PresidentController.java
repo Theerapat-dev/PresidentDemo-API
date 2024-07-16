@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import com.example.demo.module.web.president.domain.PresidentDomain;
 import com.example.demo.module.web.president.entity.AdminPrVpEntity;
@@ -20,18 +22,19 @@ import com.example.demo.module.web.president.entity.StateEntity;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PresidentController {
 
     @Autowired
     private PresidentDomain domain;
 
-    @GetMapping("/administrations")
+    @GetMapping("/Administrations")
     public ResponseEntity<List<AdministrationEntity>> getAllAdministrations() {
         List<AdministrationEntity> administrations = domain.getAllAdministrations();
         return new ResponseEntity<>(administrations, HttpStatus.OK);
     }
 
-    @GetMapping("/adminprvp")
+    @GetMapping("/Adminprvp")
     public ResponseEntity<List<AdminPrVpEntity>> getAllAdminPrVp() {
         List<AdminPrVpEntity> adminprvp = domain.getAllAdminPrVp();
         return new ResponseEntity<>(adminprvp, HttpStatus.OK);
@@ -55,7 +58,7 @@ public class PresidentController {
         return new ResponseEntity<>(president, HttpStatus.OK);
     }
 
-    @GetMapping("/PresMarriage")
+    @GetMapping("/Presmarriage")
     public ResponseEntity<List<PresMarriageEntity>> getAllPresMarriage() {
         List<PresMarriageEntity> presMarriage = domain.getAllPresMarriage();
         return new ResponseEntity<>(presMarriage, HttpStatus.OK);
