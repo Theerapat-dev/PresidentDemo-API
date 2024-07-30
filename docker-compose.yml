@@ -1,0 +1,19 @@
+version: '2.3'
+services:
+  #### Printer Service Container ####
+  cutp-printer-president:
+    container_name: cutp-printer-president
+    hostname: cutp-printer-president
+    image: ydkn/cups:latest
+
+    ports:
+      - "631:631"
+    restart: always
+    environment:
+      ADMIN_PASSWORD: cupsadmin
+    networks:
+      - networkForPresident
+
+networks:
+  networkForPresident:
+    driver: bridge
