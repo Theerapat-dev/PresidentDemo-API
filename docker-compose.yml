@@ -1,19 +1,19 @@
-version: '2.3'
+version: '3.8'
 services:
-  #### Printer Service Container ####
-  cutp-printer-president:
+  cups-server:
     container_name: cutp-printer-president
-    hostname: cutp-printer-president
+    hostname: cups-server
     image: ydkn/cups:latest
-
     ports:
       - "631:631"
     restart: always
     environment:
       ADMIN_PASSWORD: cupsadmin
     networks:
-      - networkForPresident
+      - cups-network
+    volumes:
+      - /usr/share/cups/ppd-new:/usr/share/cups/ppd-new
 
 networks:
-  networkForPresident:
+  cups-network:
     driver: bridge

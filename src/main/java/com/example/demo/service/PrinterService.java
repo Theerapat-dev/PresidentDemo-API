@@ -13,26 +13,31 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestClientException;
 
-//import java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-//import java.io.InputStreamReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PrinterService {
 
     private final String CUPS_SERVER = "http://localhost:631";
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public PrinterService() {
+        this.restTemplate = new RestTemplate();
+    }
 
     @Autowired
     private PrinterRepository printerRepository;
 
-    // ดึงข้อมูลเครื่องพิมพ์จากฐานข้อมูล
     public PrinterEntity getPrinterByName(String name) {
         Optional<PrinterEntity> printer = printerRepository.findByPrinterName(name);
         return printer.orElse(null);
@@ -42,7 +47,6 @@ public class PrinterService {
         return printerRepository.findAll();
     }
 
-    // ดึงข้อมูลเครื่องพิมพ์จาก CUPS
     public String getCupsPrinters() {
         String url = CUPS_SERVER + "/printers/";
         try {
@@ -54,7 +58,6 @@ public class PrinterService {
         }
     }
 
-    // ส่งงานพิมพ์ไปยัง CUPS
     public String printFile(String printerName, MultipartFile file) {
         PrinterEntity printer = getPrinterByName(printerName);
         if (printer == null) {
@@ -84,7 +87,6 @@ public class PrinterService {
         }
     }
 
-    // ดึงข้อมูลงานพิมพ์จาก CUPS
     public String getJobs() {
         String url = CUPS_SERVER + "/jobs/";
         try {
@@ -96,7 +98,6 @@ public class PrinterService {
         }
     }
 
-    // ยกเลิกงานพิมพ์
     public void cancelJob(String jobId) {
         String url = CUPS_SERVER + "/jobs/" + jobId;
         try {
@@ -106,58 +107,92 @@ public class PrinterService {
         }
     }
 
-    // ฟังก์ชันสำหรับคัดลอกไฟล์ PPD
-    public String copyPPDFile(String ppdURL, String printerName) throws IOException {
-        // ตรวจสอบและสร้างไดเรกทอรีถ้ายังไม่มี
-        File targetDir = new File("/etc/cups/ppd");
-        if (!targetDir.exists()) {
-            if (!targetDir.mkdirs()) {
-                throw new IOException("Failed to create directory: " + targetDir.getAbsolutePath());
-            }
-        }
-
-        // สร้างไฟล์ในไดเรกทอรีที่กำหนด
-        File targetFile = new File(targetDir, printerName + ".ppd");
-        try (FileOutputStream outStream = new FileOutputStream(targetFile)) {
-            // ดาวน์โหลดไฟล์จาก URL และเขียนลงไฟล์
-            outStream.write(restTemplate.getForObject(ppdURL, byte[].class));
-        } catch (IOException e) {
-            throw new IOException("Failed to copy PPD file from URL: " + ppdURL, e);
-        }
-
-        return targetFile.getAbsolutePath();
-    }
-
-    // ฟังก์ชันสำหรับติดตั้งไดร์เวอร์เครื่องพิมพ์โดยใช้ lpadmin แก้ใหม่ ใช้ API ของ
-    // CUPS แทน lpadmin
     public String installPrinterDriver(PrinterEntity printer) {
         String ppdURL = printer.getPpdURL();
         String printerName = printer.getPrinterName();
         String printerIP = printer.getPrinterIP();
+        String ppdFilePath = "/usr/share/cups/ppd-new/" + printerName + ".ppd";
 
-        // สร้าง URL สำหรับติดตั้งเครื่องพิมพ์
-        String url = String.format("http://localhost:631/printers/%s", printerName);
+        try {
+            downloadPPDFile(ppdURL, ppdFilePath);
+            System.out.println("PPD file copied to: " + ppdFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error downloading PPD file: " + e.getMessage();
+        }
 
-        // การกำหนด headers และ body ของคำขอ
+        if (!checkWritePermission("/usr/share/cups/ppd-new")) {
+            return "Write permission is not granted for directory: /usr/share/cups/ppd-new";
+        }
+
+        String url = CUPS_SERVER + "/admin/";
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBasicAuth("username", "password");
+
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("device-uri", "socket://" + printerIP);
-        body.add("ppd", ppdURL);
+        body.add("op", "add-printer");
+        body.add("printer_name", printerName);
+        body.add("device_uri", "socket://" + printerIP);
+        body.add("ppd_name", ppdFilePath);
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
         try {
-            // ส่งคำขอ POST ไปยัง CUPS API
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return "Printer driver installed successfully! :)";
+            Process process = Runtime.getRuntime().exec(
+                    new String[] { "docker", "exec", "cutp-printer-president", "lpadmin",
+                            "-p", printerName, "-E", "-v", "socket://" + printerIP, "-P", ppdFilePath });
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String s;
+            StringBuilder output = new StringBuilder();
+            while ((s = stdInput.readLine()) != null) {
+                output.append(s);
+            }
+            StringBuilder error = new StringBuilder();
+            while ((s = stdError.readLine()) != null) {
+                error.append(s);
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                return "Printer driver installed successfully! Output: " + output;
             } else {
-                return "Failed to install printer driver. Response: " + response.getBody();
+                return "Failed to install printer driver. Exit code: " + exitCode + ". Error: " + error;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error installing printer driver T_T: " + e.getMessage();
+            return "Error installing printer driver: " + e.getMessage();
         }
+    }
+
+    private void downloadPPDFile(String ppdURL, String destinationPath) throws IOException {
+        System.out.println("Downloading PPD file from URL: " + ppdURL);
+        byte[] ppdContent = restTemplate.getForObject(ppdURL, byte[].class);
+        if (ppdContent != null && ppdContent.length > 0) {
+            try (FileOutputStream outStream = new FileOutputStream(destinationPath)) {
+                outStream.write(ppdContent);
+                System.out.println("PPD file written to: " + destinationPath);
+
+                // คัดลอกไฟล์ PPD เข้า Docker container
+                Process process = Runtime.getRuntime().exec(
+                        new String[] { "docker", "cp", destinationPath, "cutp-printer-president:" + destinationPath });
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
+                throw new IOException("Failed to save PPD file to path: " + destinationPath, e);
+            }
+        } else {
+            throw new IOException("Failed to download PPD file from URL: " + ppdURL);
+        }
+    }
+
+    public boolean checkWritePermission(String directoryPath) {
+        File directory = new File(directoryPath);
+        System.out.println("Checking write permission for directory: " + directoryPath);
+        boolean canWrite = directory.exists() && directory.canWrite();
+        System.out.println("Can write: " + canWrite);
+        return canWrite;
     }
 }
