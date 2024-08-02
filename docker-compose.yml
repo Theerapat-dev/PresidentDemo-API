@@ -13,7 +13,13 @@ services:
       - cups-network
     volumes:
       - /usr/share/cups/ppd-new:/usr/share/cups/ppd-new
-
+    user: root
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "chmod -R 777 /usr/share/cups/ppd-new && cupsd -f"
+      ]
 networks:
   cups-network:
     driver: bridge

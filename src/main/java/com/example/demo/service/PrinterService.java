@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.ResponseErrorHandler;
-import org.springframework.web.client.RestClientException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -188,6 +186,67 @@ public class PrinterService {
         }
     }
 
+    public String installLocalPPDFile(MultipartFile file, String printerName, String printerIP) {
+        String ppdFilePath = "/usr/share/cups/ppd-new/" + printerName + ".ppd";
+
+        try {
+            savePPDFile(file, ppdFilePath);
+            System.out.println("PPD file copied to: " + ppdFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error saving PPD file: " + e.getMessage();
+        }
+
+        if (!checkWritePermission("/usr/share/cups/ppd-new")) {
+            return "Write permission is not granted for directory: /usr/share/cups/ppd-new";
+        }
+
+        try {
+            Process process = Runtime.getRuntime().exec(
+                    new String[] { "docker", "exec", "cutp-printer-president", "lpadmin",
+                            "-p", printerName, "-E", "-v", "socket://" + printerIP, "-P", ppdFilePath });
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String s;
+            StringBuilder output = new StringBuilder();
+            while ((s = stdInput.readLine()) != null) {
+                output.append(s);
+            }
+            StringBuilder error = new StringBuilder();
+            while ((s = stdError.readLine()) != null) {
+                error.append(s);
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                return "Printer driver installed successfully! Output: " + output;
+            } else {
+                return "Failed to install printer driver. Exit code: " + exitCode + ". Error: " + error;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error installing printer driver: " + e.getMessage();
+        }
+    }
+
+    private void savePPDFile(MultipartFile file, String destinationPath) throws IOException {
+        try (FileOutputStream outStream = new FileOutputStream(destinationPath)) {
+            outStream.write(file.getBytes());
+            System.out.println("PPD file written to: " + destinationPath);
+
+            // คัดลอกไฟล์ PPD เข้า Docker container
+            Process process = Runtime.getRuntime().exec(
+                    new String[] { "docker", "cp", destinationPath, "cutp-printer-president:" + destinationPath });
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("Failed to copy PPD file to Docker container. Exit code: " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new IOException("Failed to save PPD file to path: " + destinationPath, e);
+        }
+    }
+
     public boolean checkWritePermission(String directoryPath) {
         File directory = new File(directoryPath);
         System.out.println("Checking write permission for directory: " + directoryPath);
@@ -195,4 +254,5 @@ public class PrinterService {
         System.out.println("Can write: " + canWrite);
         return canWrite;
     }
+
 }
