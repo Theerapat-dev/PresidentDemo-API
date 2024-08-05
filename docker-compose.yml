@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   cups-server:
-    container_name: cutp-printer-president
+    container_name: cups-printer-president
     hostname: cups-server
     image: ydkn/cups:latest
     ports:

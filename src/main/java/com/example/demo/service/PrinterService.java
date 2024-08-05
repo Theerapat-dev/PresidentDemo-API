@@ -139,7 +139,7 @@ public class PrinterService {
 
         try {
             Process process = Runtime.getRuntime().exec(
-                    new String[] { "docker", "exec", "cutp-printer-president", "lpadmin",
+                    new String[] { "docker", "exec", "cups-printer-president", "lpadmin",
                             "-p", printerName, "-E", "-v", "socket://" + printerIP, "-P", ppdFilePath });
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -176,7 +176,7 @@ public class PrinterService {
 
                 // คัดลอกไฟล์ PPD เข้า Docker container
                 Process process = Runtime.getRuntime().exec(
-                        new String[] { "docker", "cp", destinationPath, "cutp-printer-president:" + destinationPath });
+                        new String[] { "docker", "cp", destinationPath, "cups-printer-president:" + destinationPath });
                 process.waitFor();
             } catch (IOException | InterruptedException e) {
                 throw new IOException("Failed to save PPD file to path: " + destinationPath, e);
@@ -203,7 +203,7 @@ public class PrinterService {
 
         try {
             Process process = Runtime.getRuntime().exec(
-                    new String[] { "docker", "exec", "cutp-printer-president", "lpadmin",
+                    new String[] { "docker", "exec", "cups-printer-president", "lpadmin",
                             "-p", printerName, "-E", "-v", "socket://" + printerIP, "-P", ppdFilePath });
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -237,7 +237,7 @@ public class PrinterService {
 
             // คัดลอกไฟล์ PPD เข้า Docker container
             Process process = Runtime.getRuntime().exec(
-                    new String[] { "docker", "cp", destinationPath, "cutp-printer-president:" + destinationPath });
+                    new String[] { "docker", "cp", destinationPath, "cups-printer-president:" + destinationPath });
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 throw new IOException("Failed to copy PPD file to Docker container. Exit code: " + exitCode);
