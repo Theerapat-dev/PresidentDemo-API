@@ -129,4 +129,26 @@ public class PrinterListService {
             return new ArrayList<>();
         }
     }
+
+    public boolean deletePrinter(Long id) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            File jsonFile = new File(PRINTERS_JSON_PATH);
+            List<PrinterListEntity> printers;
+            if (jsonFile.exists()) {
+                printers = objectMapper.readValue(jsonFile,
+                        objectMapper.getTypeFactory().constructCollectionType(List.class, PrinterListEntity.class));
+            } else {
+                printers = new ArrayList<>();
+            }
+            boolean removed = printers.removeIf(printer -> printer.getId().equals(id));
+            if (removed) {
+                objectMapper.writeValue(jsonFile, printers);
+            }
+            return removed;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

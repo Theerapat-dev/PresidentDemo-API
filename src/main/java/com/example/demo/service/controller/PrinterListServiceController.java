@@ -49,6 +49,16 @@ public class PrinterListServiceController {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deletePrinter(@PathVariable("id") Long id) {
+        boolean removed = printerListService.deletePrinter(id);
+        if (removed) {
+            return ResponseEntity.ok("Printer deleted successfully");
+        } else {
+            return ResponseEntity.status(404).body("Printer not found");
+        }
+    }
+
     @GetMapping("/names")
     public List<String> getAllPrinterNames() {
         return printerListService.getAllPrinterNames();
