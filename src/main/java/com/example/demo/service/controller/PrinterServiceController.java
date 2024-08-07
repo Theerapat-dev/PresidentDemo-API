@@ -1,4 +1,4 @@
-package com.example.demo.service.impl;
+package com.example.demo.service.controller;
 
 import com.example.demo.module.web.printer.entity.PrinterEntity;
 import com.example.demo.service.PrinterService;
