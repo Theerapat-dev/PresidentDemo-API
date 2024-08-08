@@ -12,7 +12,7 @@ services:
     networks:
       - cups-network
     volumes:
-      - /usr/share/cups/ppd-new:/usr/share/cups/ppd-new
+      - /path/to/host/ppd-new:/usr/share/cups/ppd-new
     user: root
     command:
       [
