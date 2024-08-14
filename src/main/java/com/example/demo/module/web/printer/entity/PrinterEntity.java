@@ -16,8 +16,8 @@ public class PrinterEntity {
     @Column(name = "printerIP")
     private String printerIP;
 
-    @Column(name = "driverPrinter")
-    private String driverPrinter;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "ppdURL")
     private String ppdURL;
@@ -39,12 +39,12 @@ public class PrinterEntity {
         this.printerIP = printerIP;
     }
 
-    public String getDriverPrinter() {
-        return driverPrinter;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDriverPrinter(String driverPrinter) {
-        this.driverPrinter = driverPrinter;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPpdURL() {
