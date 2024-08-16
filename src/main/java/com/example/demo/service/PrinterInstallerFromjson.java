@@ -58,7 +58,7 @@ public class PrinterInstallerFromjson {
 
                         // เรียกใช้คำสั่ง CUPS ใน Docker container เพื่อติดตั้งเครื่องพิมพ์
                         String result = installPrinterInDocker(ppdFileName, printer.getName(), printer.getIp(),
-                                printer.getDescription(), "Floor 2");
+                                printer.getDescription(),  printer.getLocation());
                         System.out.println(result); // แสดงผลลัพธ์ของการติดตั้งเครื่องพิมพ์
 
                         // ลบไฟล์ PPD หลังจากติดตั้งเสร็จสิ้น
