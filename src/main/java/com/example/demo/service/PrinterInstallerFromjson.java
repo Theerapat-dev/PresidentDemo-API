@@ -16,7 +16,7 @@ public class PrinterInstallerFromjson {
     // เส้นทางไฟล์ JSON ที่เก็บข้อมูลของเครื่องพิมพ์
     private static final String PRINTERS_JSON_PATH = "src/main/resources/printers.json";
 
-    // เมธอดหลักที่ใช้ในการติดตั้งเครื่องพิมพ์จากไฟล์ JSON-
+    // เมธอดหลักที่ใช้ในการติดตั้งเครื่องพิมพ์จากไฟล์ JSON
     public void installPrinters() {
         try {
             // สร้าง ObjectMapper สำหรับการอ่านข้อมูลจาก JSON
@@ -51,12 +51,18 @@ public class PrinterInstallerFromjson {
                         if (!copyPPDFileToDocker(ppdFileName)) {
                             // แสดงข้อผิดพลาดหากไม่สามารถคัดลอกไฟล์ PPD ได้
                             System.err.println("Failed to copy PPD file to Docker container: " + ppdFileName);
+                            // ลบไฟล์ PPD หลังจากคัดลอกไม่สำเร็จ
+                            cleanUpPPDFile(ppdFileName);
                             continue; // ข้ามไปยังเครื่องพิมพ์ถัดไป
                         }
 
                         // เรียกใช้คำสั่ง CUPS ใน Docker container เพื่อติดตั้งเครื่องพิมพ์
-                        String result = installPrinterInDocker(ppdFileName, printer.getName(), printer.getIp());
+                        String result = installPrinterInDocker(ppdFileName, printer.getName(), printer.getIp(),
+                                printer.getDescription());
                         System.out.println(result); // แสดงผลลัพธ์ของการติดตั้งเครื่องพิมพ์
+
+                        // ลบไฟล์ PPD หลังจากติดตั้งเสร็จสิ้น
+                        cleanUpPPDFile(ppdFileName);
                     }
                 }
             } else {
@@ -85,13 +91,15 @@ public class PrinterInstallerFromjson {
     }
 
     // เมธอดที่ใช้ในการติดตั้งเครื่องพิมพ์ใน Docker container
-    private static String installPrinterInDocker(String ppdFilePath, String printerName, String printerIP) {
+    private static String installPrinterInDocker(String ppdFilePath, String printerName, String printerIP,
+            String description) {
         try {
             // สร้าง ProcessBuilder สำหรับคำสั่ง CUPS
             ProcessBuilder processBuilder = new ProcessBuilder(
                     "docker", "exec", "cups-printer-president", "lpadmin",
                     "-p", printerName, "-E", "-v", "socket://" + printerIP, "-P",
-                    "/usr/share/cups/ppd-new/" + ppdFilePath);
+                    "/usr/share/cups/ppd-new/" + ppdFilePath, "-D", description); // เพิ่มพารามิเตอร์ -D
+
             processBuilder.inheritIO(); // ส่งข้อมูลการป้อนข้อมูลและข้อมูลเอาท์พุตไปยังคอนโซล
             Process process = processBuilder.start();
             int exitCode = process.waitFor(); // รอให้คำสั่งเสร็จสิ้น
@@ -107,6 +115,18 @@ public class PrinterInstallerFromjson {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace(); // แสดงข้อผิดพลาดหากมีปัญหาในการติดตั้งเครื่องพิมพ์
             return "Error installing printer: " + e.getMessage();
+        }
+    }
+
+    // ลบไฟล์ PPD หลังจากการติดตั้งเสร็จสิ้น
+    private static void cleanUpPPDFile(String ppdFilePath) {
+        File ppdFile = new File(ppdFilePath);
+        if (ppdFile.exists()) {
+            if (ppdFile.delete()) {
+                System.out.println("PPD file deleted successfully.");
+            } else {
+                System.err.println("Failed to delete PPD file.");
+            }
         }
     }
 }
