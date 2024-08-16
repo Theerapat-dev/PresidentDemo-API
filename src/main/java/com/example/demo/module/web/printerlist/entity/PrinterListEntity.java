@@ -6,9 +6,10 @@ public class PrinterListEntity {
     private String name;
     private String ip;
     private String description;
+    private String location;
     private String ppdBase64;
 
-    // Getters and Setters
+    // Getter และ Setter อื่นๆ
     public Long getId() {
         return id;
     }
@@ -39,6 +40,14 @@ public class PrinterListEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getPpdBase64() {

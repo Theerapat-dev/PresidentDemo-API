@@ -58,7 +58,7 @@ public class PrinterInstallerFromjson {
 
                         // เรียกใช้คำสั่ง CUPS ใน Docker container เพื่อติดตั้งเครื่องพิมพ์
                         String result = installPrinterInDocker(ppdFileName, printer.getName(), printer.getIp(),
-                                printer.getDescription());
+                                printer.getDescription(), "Floor 2");
                         System.out.println(result); // แสดงผลลัพธ์ของการติดตั้งเครื่องพิมพ์
 
                         // ลบไฟล์ PPD หลังจากติดตั้งเสร็จสิ้น
@@ -92,13 +92,13 @@ public class PrinterInstallerFromjson {
 
     // เมธอดที่ใช้ในการติดตั้งเครื่องพิมพ์ใน Docker container
     private static String installPrinterInDocker(String ppdFilePath, String printerName, String printerIP,
-            String description) {
+            String description, String location) {
         try {
             // สร้าง ProcessBuilder สำหรับคำสั่ง CUPS
             ProcessBuilder processBuilder = new ProcessBuilder(
                     "docker", "exec", "cups-printer-president", "lpadmin",
                     "-p", printerName, "-E", "-v", "socket://" + printerIP, "-P",
-                    "/usr/share/cups/ppd-new/" + ppdFilePath, "-D", description); // เพิ่มพารามิเตอร์ -D
+                    "/usr/share/cups/ppd-new/" + ppdFilePath, "-D", description, "-L", location);
 
             processBuilder.inheritIO(); // ส่งข้อมูลการป้อนข้อมูลและข้อมูลเอาท์พุตไปยังคอนโซล
             Process process = processBuilder.start();

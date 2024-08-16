@@ -56,7 +56,7 @@ public class PrinterListService {
         }
     }
 
-    public ResponseEntity<String> installDriver(MultipartFile file, String name) {
+    public ResponseEntity<String> installDriver(MultipartFile file, String name, String location) {
         try {
             // สร้างไฟล์ชั่วคราวเพื่อเก็บไฟล์ PPD ที่อัปโหลด
             File tempFile = File.createTempFile("ppd", ".ppd");
@@ -81,6 +81,7 @@ public class PrinterListService {
             for (PrinterListEntity existingPrinter : printers) {
                 if (existingPrinter.getName().equals(name)) {
                     existingPrinter.setPpdBase64(base64Encoded);
+                    existingPrinter.setLocation(location); // อัปเดต location
                     printerFound = true;
                     break;
                 }
@@ -93,6 +94,7 @@ public class PrinterListService {
                 newPrinter.setIp("172.16.22.241"); // IP ตัวอย่าง
                 newPrinter.setDescription("เครื่องที่ไม่มีในฐานข้อมูล"); // คำอธิบายตัวอย่าง
                 newPrinter.setPpdBase64(base64Encoded);
+                newPrinter.setLocation(location); // เพิ่ม location
                 printers.add(newPrinter);
             }
 
