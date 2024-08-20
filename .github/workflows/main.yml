@@ -23,7 +23,6 @@ jobs:
 
       - name: Build and Run Spring Boot API
         run: |
-          cd path/to/your-api-directory
           mvn clean install
           nohup mvn spring-boot:run > /dev/null 2>&1 &
 
