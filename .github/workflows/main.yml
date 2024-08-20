@@ -38,7 +38,7 @@ jobs:
         with:
           repository: Theerapat-dev/PresidentDemo-Web
           path: ./PresidentDemo-Web
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           clean: true
           fetch-depth: 1
           submodules: false
