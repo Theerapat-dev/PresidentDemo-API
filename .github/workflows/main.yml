@@ -1,4 +1,4 @@
-name: Run and Test API
+name: Run and Test API and Web
 
 on:
   push:
@@ -38,6 +38,12 @@ jobs:
         with:
           repository: Theerapat-dev/PresidentDemo-Web
           path: ./PresidentDemo-Web
+          token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true
+          fetch-depth: 1
+          submodules: false
+          lfs: false
+          set-safe-directory: true
       
       - name: Install Node.js
         uses: actions/setup-node@v2
@@ -46,7 +52,6 @@ jobs:
 
       - name: Build and Run Web
         run: |
+          cd ./PresidentDemo-Web
           npm install
           npm start
-
-    
