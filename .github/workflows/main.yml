@@ -19,8 +19,17 @@ jobs:
           distribution: 'adopt'
           java-version: '8'
       
-      - name: Build and Run Spring Boot
+      - name: Build and Run Spring Boot API
         run: |
-          ./gradlew build
-          ./gradlew bootRun &
+          mvn clean install
+          mvn spring-boot:run &
+      
+      - name: Wait for API to start
+        run: sleep 30
+
+      - name: Check if API is Running
+        run: |
+          curl --fail http://localhost:8080/actuator/health || exit 1
+
+
     
