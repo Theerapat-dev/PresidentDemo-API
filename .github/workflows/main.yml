@@ -26,5 +26,25 @@ jobs:
           mvn clean install
           nohup mvn spring-boot:run > /dev/null 2>&1 &
 
-      - name: Wait for API to start
-        run: sleep 30
+
+  run-web:
+    needs: run-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Web repository
+        uses: actions/checkout@v2
+        with:
+          repository: Theerapat-dev/PresidentDemo-Web
+          path: ./PresidentDemo-Web
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Build and Run Web
+        run: |
+          npm install
+          npm start
+
+    
