@@ -3,10 +3,12 @@ name: Run and Test API
 on:
   push:
     branches:
-      - main
+      - main  # สำหรับ api
+      - master  # สำหรับ web
   pull_request:
     branches:
       - main
+      - master
 
 jobs:
   run-api:
