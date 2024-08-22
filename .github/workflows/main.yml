@@ -82,6 +82,15 @@ jobs:
           node-version: '16'
       - name: Install Playwrighter
         run: npx playwright install
+
+      - name: Start the app
+        run: |
+          cd ./PresidentDemo-Web
+          npm start &
+          npx wait-on http://localhost:4200
+        env:
+          PORT: 4200
+
       - name: Run Playwright tests
         id: run-tests
         run: |
