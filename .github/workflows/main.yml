@@ -85,7 +85,7 @@ jobs:
 
       - name: Start the app
         run: |
-          npm start &
+          npm run start &
           npx wait-on http://localhost:4200
         env:
           PORT: 4200
