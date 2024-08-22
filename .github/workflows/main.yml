@@ -33,25 +33,26 @@ jobs:
     needs: run-api
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Web repository
-        uses: actions/checkout@v2
-        with:
+     - name: Checkout Web repository
+       uses: actions/checkout@v2
+       with:
           repository: Theerapat-dev/PresidentDemo-Web
           path: ./PresidentDemo-Web
           token: ${{ secrets.GH_PAT }}
+          ref: ${{ github.event.inputs.web_branch || 'dorn-ci' }}
           clean: true
           fetch-depth: 1
           submodules: false
           lfs: false
           set-safe-directory: true
       
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
+     - name: Install Node.js
+       uses: actions/setup-node@v2
+       with:
           node-version: '16'
 
-      - name: Build and Run Web
-        run: |
+     - name: Build and Run Web
+       run: |
           cd ./PresidentDemo-Web
           npm install --force
           npm start
