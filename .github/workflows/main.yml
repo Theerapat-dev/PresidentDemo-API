@@ -3,10 +3,10 @@ name: Run API, Web, and Playwright Tests
 on:
   push:
     branches:
-      - dorn-ci
+      - main
   pull_request:
     branches:
-      - dorn-ci
+      - main
   workflow_dispatch:
     inputs:
       api_branch:
@@ -36,7 +36,7 @@ jobs:
           mvn clean install
           nohup mvn spring-boot:run > /dev/null 2>&1 &
 
-  run-web:
+  run-web-and-test:
     needs: run-api
     runs-on: ubuntu-latest
     steps:
@@ -44,65 +44,43 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: Theerapat-dev/PresidentDemo-Web
-          path: ./PresidentDemo-Web
           token: ${{ secrets.GH_PAT }}
           ref: ${{ github.event.inputs.web_branch || 'dorn-ci' }}
-          clean: true
-          fetch-depth: 1
-          submodules: false
-          lfs: false
-          set-safe-directory: true
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - name: Set npm registy
+      - name: Set npm registry
         run: npm config set registry https://registry.npmjs.org/
       - name: Install dependencies
-        run: |
-          cd ./PresidentDemo-Web
-          npm install --force
+        run: npm install --force
       - name: Start the app
         run: |
-          cd ./PresidentDemo-Web
           npm start &
           npx wait-on http://localhost:4200
         env:
           PORT: 4200
-
-  e2e:
-    needs: run-web
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      - name: Install Playwrighter
+      - name: Install Playwright
         run: npx playwright install
-
-      - name: Start the app
-        run: |
-          npm run start &
-          npx wait-on http://localhost:4200
-        env:
-          PORT: 4200
-
       - name: Run Playwright tests
         id: run-tests
         run: |
-          npx playwright test 
-      # - name: Upload test results
-      #   if: always()
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: playwright-results
-      #     path: results.json
+          npx playwright test --output=results.json || exit 1
+          if jq -e '.[] | select(.status == "failed")' results.json > /dev/null; then
+            echo "Tests failed."
+            exit 1
+          else
+            echo "Tests passed."
+          fi
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-results
+          path: results.json
 
   notify:
-    needs: e2e
+    needs: run-web-and-test
     runs-on: ubuntu-latest
     if: failure()
     steps:
