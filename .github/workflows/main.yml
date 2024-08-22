@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main  # สำหรับ api
-      - master  # สำหรับ web
+      - dorn-ci  # สำหรับ web
   pull_request:
     branches:
       - main
-      - master
+      - dorn-ci
 
 jobs:
   run-api:
