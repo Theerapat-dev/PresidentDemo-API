@@ -85,7 +85,6 @@ jobs:
 
       - name: Start the app
         run: |
-          cd ./PresidentDemo-Web
           npm start &
           npx wait-on http://localhost:4200
         env:
