@@ -80,7 +80,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - name: Install Playwright
+      - name: Install Playwrighter
         run: npx playwright install
       - name: Run Playwright tests
         id: run-tests
