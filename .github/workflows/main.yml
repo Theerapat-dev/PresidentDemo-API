@@ -62,10 +62,6 @@ jobs:
         run: |
           cd ./PresidentDemo-Web
           npm install --force
-      - name: Build the Angular app
-        run: |
-          cd ./PresidentDemo-Web
-          npm run build
       - name: Start the app
         run: |
           cd ./PresidentDemo-Web
