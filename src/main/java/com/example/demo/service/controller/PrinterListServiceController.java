@@ -43,23 +43,18 @@ public class PrinterListServiceController {
             @RequestParam("file") MultipartFile file, // รับไฟล์ไดรเวอร์ที่ถูกอัปโหลด
             @RequestParam("name") String name, // รับชื่อของเครื่องพิมพ์
             @RequestParam("location") String location) { // รับ location ของเครื่องพิมพ์
-        // ตรวจสอบว่าไฟล์ไม่ว่างเปล่า
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File parameter is missing or empty");
         }
-        // ตรวจสอบว่าชื่อเครื่องพิมพ์ไม่ว่างเปล่า
         if (name == null || name.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("Name parameter is missing or empty");
         }
-        // ตรวจสอบว่า location ไม่ว่างเปล่า
         if (location == null || location.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("Location parameter is missing or empty");
         }
         try {
-            // ติดตั้งไดรเวอร์โดยใช้บริการที่ถูกเรียกใช้
             return printerListService.installDriver(file, name, location);
         } catch (Exception e) {
-            // ถ้ามีข้อผิดพลาดเกิดขึ้น จะพิมพ์ stack trace และส่งกลับสถานะ 500 Internal Server Error
             e.printStackTrace();
             return ResponseEntity.status(500).body("Error installing driver");
         }
