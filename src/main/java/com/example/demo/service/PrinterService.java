@@ -123,8 +123,6 @@ public class PrinterService {
             return "Write permission is not granted for directory: /usr/share/cups/ppd-new";
         }
 
-        String url = CUPS_SERVER + "/admin/";
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth("username", "password");
@@ -134,8 +132,6 @@ public class PrinterService {
         body.add("printer_name", printerName);
         body.add("device_uri", "socket://" + printerIP);
         body.add("ppd_name", ppdFilePath);
-
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
         try {
             Process process = Runtime.getRuntime().exec(
