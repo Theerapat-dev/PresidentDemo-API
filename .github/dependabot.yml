@@ -1,0 +1,12 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2 # ระบุเวอร์ชันของ Dependabot configuration
+updates:
+  - package-ecosystem: "maven" # ระบุระบบจัดการแพ็กเกจที่ใช้ในโปรเจกต์ (ในที่นี้คือ Maven สำหรับ Java)
+    directory: "/" # ระบุโฟลเดอร์ที่มีไฟล์ dependencies อยู่, "/" หมายถึงโฟลเดอร์รากของโปรเจกต์
+    schedule:
+      interval: "weekly" # กำหนดให้ Dependabot ตรวจสอบการอัปเดต dependencies ทุกสัปดาห์ daily=วัน monthly=เดือน
+    open-pull-requests-limit: 5 # จำกัดจำนวน PR ที่ Dependabot จะเปิดพร้อมกันให้ไม่เกิน 5 PR
