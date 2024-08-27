@@ -1,7 +1,7 @@
 # .github/dependabot.yml
 version: 2
 updates:
-  - package-ecosystem: "maven"  # ระบบจัดการแพ็กเกจ Maven สำหรับ Java
+  - package-ecosystem: "maven"
     directory: "/"  # ระบุโฟลเดอร์ที่มีไฟล์ pom.xml, "/" หมายถึงโฟลเดอร์รากของโปรเจกต์
     schedule:
       interval: "weekly"  # กำหนดให้ Dependabot ตรวจสอบการอัปเดตทุกสัปดาห์
