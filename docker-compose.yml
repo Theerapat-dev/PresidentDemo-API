@@ -11,8 +11,6 @@ services:
       ADMIN_PASSWORD: cupsadmin
     networks:
       - cups-network
-    volumes:
-      - /path/to/host/ppd-new:/usr/share/cups/ppd-new
     user: root
     command:
       [
