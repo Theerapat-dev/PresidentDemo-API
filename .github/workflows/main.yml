@@ -1,14 +1,12 @@
-name: Run and Test API and Web
+name: Run and Test API
 
 on:
   push:
     branches:
-      - main  # สำหรับ api
-      - dorn-ci  # สำหรับ web
+      - main  # สำหรับ API
   pull_request:
     branches:
       - main
-      - dorn-ci
 
 jobs:
   run-api:
@@ -27,32 +25,3 @@ jobs:
         run: |
           mvn clean install
           nohup mvn spring-boot:run > /dev/null 2>&1 &
-
-
-  run-web:
-    needs: run-api
-    runs-on: ubuntu-latest
-    steps:
-     - name: Checkout Web repository
-       uses: actions/checkout@v2
-       with:
-          repository: Theerapat-dev/PresidentDemo-Web
-          path: ./PresidentDemo-Web
-          token: ${{ secrets.GH_PAT }}
-          ref: ${{ github.event.inputs.web_branch || 'dorn-ci' }}
-          clean: true
-          fetch-depth: 1
-          submodules: false
-          lfs: false
-          set-safe-directory: true
-      
-     - name: Install Node.js
-       uses: actions/setup-node@v2
-       with:
-          node-version: '16'
-
-     - name: Build and Run Web
-       run: |
-          cd ./PresidentDemo-Web
-          npm install --force
-          npm start
