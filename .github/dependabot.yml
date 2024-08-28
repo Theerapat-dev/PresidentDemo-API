@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"  # ตำแหน่งที่ตั้งของไฟล์ pom.xml
+    schedule:
+      interval: "weekly"  # กำหนดความถี่ในการตรวจสอบ เช่น daily, weekly, monthly
+    open-pull-requests-limit: 10  # กำหนดจำนวน PR ที่เปิดได้พร้อมกัน
+    commit-message:
+      prefix: "[Dependabot]"
