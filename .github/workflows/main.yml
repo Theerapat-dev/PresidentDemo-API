@@ -1,29 +1,22 @@
-# name: Test API
+name: Dependabot Update
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Schedule to run weekly
+  workflow_dispatch: # Allows manual triggering of the workflow
+  pull_request:
+    types: [opened, synchronize] # Triggers when a pull request is created or updated
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-
-#       - name: Set up JDK 17
-#         uses: actions/setup-java@v2
-#         with:
-#           distribution: 'adopt'
-#           java-version: '17'
-
-#       - name: Build with Maven
-#         run: mvn clean install
-
-#       - name: Run tests
-#         run: mvn test
+      - name: Run Dependabot
+        uses: dependabot/dependabot-core@v1
+        with:
+          package-ecosystem: 'maven'
+          directory: '/'
+          schedule: 'daily'
