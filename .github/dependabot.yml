@@ -1,8 +1,15 @@
-# .github/dependabot.yml
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/"  # ระบุโฟลเดอร์ที่มีไฟล์ pom.xml, "/" หมายถึงโฟลเดอร์รากของโปรเจกต์
+    directory: "/"
     schedule:
-      interval: "weekly"  # กำหนดให้ Dependabot ตรวจสอบการอัปเดตทุกสัปดาห์
-    open-pull-requests-limit: 5  # จำกัดจำนวน PR ที่ Dependabot จะเปิดพร้อมกัน
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    assignees:
+      - "theerapat"
+    reviewers:
+      - "reviewer1"
+      - "reviewer2"
+    # ignore:
+    #   - dependency-name: "specific-dependency"
+    #     versions: ["1.x", "2.x"]
