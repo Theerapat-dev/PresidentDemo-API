@@ -2,7 +2,7 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/pom.xml"  # ระบุโฟลเดอร์ที่มีไฟล์ pom.xml, "/" หมายถึงโฟลเดอร์รากของโปรเจกต์
+    directory: "/"  # ระบุโฟลเดอร์ที่มีไฟล์ pom.xml, "/" หมายถึงโฟลเดอร์รากของโปรเจกต์
     schedule:
       interval: "weekly"  # กำหนดให้ Dependabot ตรวจสอบการอัปเดตทุกสัปดาห์
     open-pull-requests-limit: 5  # จำกัดจำนวน PR ที่ Dependabot จะเปิดพร้อมกัน
