@@ -1,15 +1,17 @@
 name: Dependabot Updates
 
 on:
+  workflow_dispatch: # Allows manual trigger of the workflow
   schedule:
-    - cron: '0 0 * * 0' # Runs once a week
+    - cron: '0 0 * * 0' # Runs once a week (Sunday at midnight UTC)
 
 jobs:
   update-dependencies:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest # Use GitHub-hosted runner
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Update dependencies
         run: |
+          echo "Updating dependencies..."
           # Your script to update dependencies here
