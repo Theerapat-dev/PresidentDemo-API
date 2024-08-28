@@ -1,6 +1,0 @@
-version: 2
-updates:
-  - package-ecosystem: "maven"
-    directory: "/demo/demo"  # ระบุตำแหน่งที่มีไฟล์ pom.xml
-    schedule:
-      interval: "weekly"  # ใช้ "weekly" หรือค่าอื่นๆ ตามต้องการ
