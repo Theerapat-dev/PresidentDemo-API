@@ -1,11 +1,11 @@
-name: Dependabot Update
+name: Dependabot Updates
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Schedule to run weekly
-  workflow_dispatch: # Allows manual triggering of the workflow
+    - cron: '0 0 * * 0'  # การทำงานทุกสัปดาห์
+  workflow_dispatch: # อนุญาตให้เริ่มต้นด้วยตนเอง
   pull_request:
-    types: [opened, synchronize] # Triggers when a pull request is created or updated
+    types: [opened, synchronize] # เรียกใช้งานเมื่อมีการสร้างหรืออัปเดต PR
 
 jobs:
   dependabot:

@@ -1,15 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/"
+    directory: "/"  # หรือระบุที่อยู่ที่ถูกต้องที่มีไฟล์ pom.xml
     schedule:
-      interval: "daily"  # ใช้ "daily" เพื่อทดสอบบ่อยขึ้น
+      interval: "daily"  # ใช้ "weekly" ได้ตามต้องการ
     open-pull-requests-limit: 5
     assignees:
-      - "THEERAPAT"
+      - "theerapat"
     reviewers:
       - "reviewer1"
       - "reviewer2"
-    # ignore:
-    #   - dependency-name: "specific-dependency"
-    #     versions: ["1.x", "2.x"]
