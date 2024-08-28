@@ -6,7 +6,7 @@ updates:
       interval: "daily"  # ใช้ "daily" เพื่อทดสอบบ่อยขึ้น
     open-pull-requests-limit: 5
     assignees:
-      - "theerapat"
+      - "THEERAPAT"
     reviewers:
       - "reviewer1"
       - "reviewer2"
