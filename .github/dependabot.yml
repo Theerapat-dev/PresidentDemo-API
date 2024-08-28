@@ -4,9 +4,3 @@ updates:
     directory: "/"  # หรือระบุที่อยู่ที่ถูกต้องที่มีไฟล์ pom.xml
     schedule:
       interval: "daily"  # ใช้ "weekly" ได้ตามต้องการ
-    open-pull-requests-limit: 5
-    assignees:
-      - "theerapat"
-    reviewers:
-      - "reviewer1"
-      - "reviewer2"
