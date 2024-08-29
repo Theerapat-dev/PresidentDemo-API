@@ -14,4 +14,4 @@ updates:
   #     interval: "weekly" 
   #   open-pull-requests-limit: 5  # กำหนดจำนวน PR ที่เปิดได้พร้อมกันสำหรับโปรเจ็กต์ Java
   #   commit-message:
-  #     prefix: "[Dependabot-Java]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot-Java]
+  #     prefix: "[Dependabot-Java]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot-Java]s
