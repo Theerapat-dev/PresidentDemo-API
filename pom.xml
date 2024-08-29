@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
-			<version>3.1.0</version> <!-- ลดเวอร์ชัน -->
+			<version>3.2.0</version> <!-- ลดเวอร์ชัน -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
