@@ -91,7 +91,7 @@
 		<dependency>
      		<groupId>org.cups4j</groupId>
       		<artifactId>cups4j</artifactId>
-      		<version>0.6.0</version> <!-- ลดเวอร์ชัน -->
+      		<version>0.7.9</version> <!-- ลดเวอร์ชัน -->
     	</dependency>
 		<dependency>
 		<groupId>org.apache.logging.log4j</groupId>
