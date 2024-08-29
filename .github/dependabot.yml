@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "maven"  # กำหนดให้ Dependabot ทำงานกับ Maven dependencies
-    directory: "/pom.xml"  # ตำแหน่งที่ตั้งของไฟล์ pom.xml
+    directory: "/"  # ตำแหน่งที่ตั้งของไฟล์ pom.xml
     schedule:
       interval: "weekly"  # กำหนดความถี่ในการตรวจสอบเป็นรายสัปดาห์
     open-pull-requests-limit: 5  # กำหนดจำนวน PR ที่เปิดได้พร้อมกัน
