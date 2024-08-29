@@ -1,9 +1,17 @@
 version: 2
 updates:
-#  - package-ecosystem: "maven"
-#    directory: "/"  # ตำแหน่งที่ตั้งของไฟล์ pom.xml
-#    schedule:
-#      interval: "daily"  # กำหนดความถี่ในการตรวจสอบ เช่น daily, weekly, monthly
-#    open-pull-requests-limit: 10  # กำหนดจำนวน PR ที่เปิดได้พร้อมกัน
-#    commit-message:
-#      prefix: "[Dependabot]"
+  - package-ecosystem: "maven"  # กำหนดให้ Dependabot ทำงานกับ Maven dependencies
+    directory: "/"  # ตำแหน่งที่ตั้งของไฟล์ pom.xml
+    schedule:
+      interval: "weekly"  # กำหนดความถี่ในการตรวจสอบเป็นรายสัปดาห์
+    open-pull-requests-limit: 10  # กำหนดจำนวน PR ที่เปิดได้พร้อมกัน
+    commit-message:
+      prefix: "[Dependabot]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot]
+
+  - package-ecosystem: "maven"  # ตรวจสอบ dependencies สำหรับ Maven ในโปรเจ็กต์ Java
+    directory: "/java"  # กำหนดตำแหน่งโฟลเดอร์ที่ใช้ Maven สำหรับโปรเจ็กต์ Java
+    schedule:
+      interval: "daily"  # กำหนดความถี่ในการตรวจสอบเป็นรายวัน
+    open-pull-requests-limit: 5  # กำหนดจำนวน PR ที่เปิดได้พร้อมกันสำหรับโปรเจ็กต์ Java
+    commit-message:
+      prefix: "[Dependabot-Java]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot-Java]
