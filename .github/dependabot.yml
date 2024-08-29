@@ -8,10 +8,10 @@ updates:
     commit-message:
       prefix: "[Dependabot]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot]
 
-  - package-ecosystem: "maven"  # ตรวจสอบ dependencies สำหรับ Maven ในโปรเจ็กต์ Java
-    directory: "/java"  # กำหนดตำแหน่งโฟลเดอร์ที่ใช้ Maven สำหรับโปรเจ็กต์ Java
-    schedule:
-      interval: "weekly" 
-    open-pull-requests-limit: 5  # กำหนดจำนวน PR ที่เปิดได้พร้อมกันสำหรับโปรเจ็กต์ Java
-    commit-message:
-      prefix: "[Dependabot-Java]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot-Java]
+  # - package-ecosystem: "maven"  # ตรวจสอบ dependencies สำหรับ Maven ในโปรเจ็กต์ Java
+  #   directory: "/java"  # กำหนดตำแหน่งโฟลเดอร์ที่ใช้ Maven สำหรับโปรเจ็กต์ Java
+  #   schedule:
+  #     interval: "weekly" 
+  #   open-pull-requests-limit: 5  # กำหนดจำนวน PR ที่เปิดได้พร้อมกันสำหรับโปรเจ็กต์ Java
+  #   commit-message:
+  #     prefix: "[Dependabot-Java]"  # ตั้งให้ commit message ขึ้นต้นด้วย [Dependabot-Java]
