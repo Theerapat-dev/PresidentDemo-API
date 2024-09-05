@@ -1,4 +1,4 @@
-name: Run API, Web, and Playwright Tests
+name: Run API, Web, and Playwright 
 
 on:
   push:
