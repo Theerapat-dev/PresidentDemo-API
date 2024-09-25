@@ -21,10 +21,10 @@ public class LoginController {
         String username = loginData.get("username");
         String password = loginData.get("password");
 
-        // ใช้ Prepared Statement เพื่อลดความเสี่ยงจาก SQL Injection
-        String sql = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ?";
+        // อันตราย: ใช้ SQL query โดยตรง ซึ่งอาจมีช่องโหว่ SQL Injection
+        String sql = "SELECT COUNT(*) FROM users WHERE username = '" + username + "' AND password = '" + password + "'";
         
-        Integer userCount = jdbcTemplate.queryForObject(sql, new Object[]{username, password}, Integer.class);
+        Integer userCount = jdbcTemplate.queryForObject(sql, Integer.class);
         
         if (userCount != null && userCount > 0) {
             return "Login Successful";
