@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api")
@@ -17,18 +18,23 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestBody Map<String, String> loginData) {
+        if (loginData == null || !loginData.containsKey("username") || !loginData.containsKey("password")) {
+            return "Invalid login data"; // ตรวจสอบข้อมูลที่เข้ามา
+        }
+
         String username = loginData.get("username");
         String password = loginData.get("password");
 
-        // ป้องกัน SQL Injection โดยใช้ Prepared Statement
+        // คำสั่ง SQL ควรใช้ PreparedStatement แทนการใช้ String concatenation
         String sql = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ?";
-        
-        Integer userCount = jdbcTemplate.queryForObject(sql, new Object[]{username, password}, Integer.class);
-        
+
+        Integer userCount = jdbcTemplate.queryForObject(sql, new Object[] { username, password }, Integer.class);
+
         if (userCount != null && userCount > 0) {
             return "Login Successful";
         } else {
             return "Login Failed";
         }
     }
+
 }
