@@ -22,7 +22,7 @@ import com.example.demo.module.web.president.entity.StateEntity;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class PresidentController {
 
     @Autowired
